@@ -31,10 +31,11 @@ def plt_errorbar(ax, xplt,yplt,yerr,label=None,lw=2,c='steelblue',marker='',alph
         ax.fill_between(xplt, offset, yplt, color=c, alpha=alpha, linewidth=0, zorder=-1)
 
 def fit_gp_and_predict(time,y,t_start,t_end,ax,fill_color,opa,dt,offset=0,zorder=None,add_to_offset=True):
+    dt *= 5
     # fit GP
     kernel = DotProduct() + WhiteKernel()
     gpr = GaussianProcessRegressor(kernel=kernel,
-                               random_state=0).fit(time.reshape([time.shape[0],1]), y)
+                                   random_state=0, normalize_y=True).fit(time.reshape([time.shape[0],1]), y)
     #create prediction
     t_pred = np.linspace(t_start-0.1,t_end,dt).reshape([dt,1])
     y_pred = gpr.sample_y(t_pred,n_samples=dt,random_state=0)
