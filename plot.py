@@ -32,6 +32,8 @@ if __name__ == '__main__':
 
     data_total_by_year = np.genfromtxt('./data/SNF_total.csv', delimiter=',', skip_header=1)
 
+    data_e_waste_by_year = np.genfromtxt('./data/e_waste.csv', delimiter=',')[:, 1]
+
     start_year = 2008
     end_year = 2020
     extrapolate_year = 2025
@@ -58,7 +60,8 @@ if __name__ == '__main__':
     # total_spending = 80 + 0.06 * time_months + 0.2 * np.random.randn(n_months)
     total_spending = data_total
     index = 10 * (40 + 0.04 * time_months + 0.2 * np.random.randn(n_months))
-    measure_one = 30 - 2.05 * time_years + 0.4 * np.random.randn(n_years)
+    # measure_one = 30 - 2.05 * time_years + 0.4 * np.random.randn(n_years)
+    measure_one = data_e_waste_by_year
     measure_two = 10 + 1.45 * time_years + 0.8 * np.random.randn(n_years)
     measure_three = 20 - 1.05 * time_years + 0.4 * np.random.randn(n_years)
     measure_four = 1 + 3.45 * time_years + 0.2 * np.random.randn(n_years)
@@ -69,10 +72,10 @@ if __name__ == '__main__':
     ticks_years = np.arange(start_year, extrapolate_year, 3)
 
     fig = plt.figure(figsize=(6, 6 / 1.618))
-    ax_positive = fig.add_axes([0.05, 0.5, 0.75, 0.2])
-    ax_infinite = fig.add_axes([0.05, 0.725, 0.75, 0.2])
-    ax_negative = fig.add_axes([0.05, 0.1, 0.75, 0.4])
-    ax_background = fig.add_axes([0.05, 0.05, 0.75, 0.4], zorder=-1)
+    ax_positive = fig.add_axes([0.05, 0.1, 0.75, 0.4])
+    ax_infinite = fig.add_axes([0.05, 0.51, 0.75, 0.4])
+    # ax_negative = fig.add_axes([0.05, 0.1, 0.75, 0.4])
+    # ax_background = fig.add_axes([0.05, 0.05, 0.75, 0.4], zorder=-1)
 
     ax_positive.yaxis.set_label_position("right")
     ax_positive.yaxis.tick_right()
@@ -103,20 +106,20 @@ if __name__ == '__main__':
     ax_infinite.set_yticks([0.1e9, 1e9])
     ax_infinite.set_yticklabels(["100Mio. CHF", "1000Mio. CHF"])
 
-    ax_negative.patch.set_alpha(0.0)
-    ax_negative.yaxis.tick_right()
-    ax_negative.set_xticks([])
-    ax_negative.set_yticks([])
-    ax_negative.spines['right'].set_visible(False)
-    ax_negative.spines['left'].set_visible(False)
-    ax_negative.spines['bottom'].set_visible(False)
-    ax_negative.set_xlim([start_year, extrapolate_year])
-    ax_negative.set_ylim([-2, 4])
+    # ax_negative.patch.set_alpha(0.0)
+    # ax_negative.yaxis.tick_right()
+    # ax_negative.set_xticks([])
+    # ax_negative.set_yticks([])
+    # ax_negative.spines['right'].set_visible(False)
+    # ax_negative.spines['left'].set_visible(False)
+    # ax_negative.spines['bottom'].set_visible(False)
+    # ax_negative.set_xlim([start_year, extrapolate_year])
+    # ax_negative.set_ylim([-2, 4])
 
-    ax_background.set_xlim([start_year, extrapolate_year])
-    ax_background.get_xaxis().set_visible(False)
-    ax_background.get_yaxis().set_visible(False)
-    ax_background.axis('off')
+    # ax_background.set_xlim([start_year, extrapolate_year])
+    # ax_background.get_xaxis().set_visible(False)
+    # ax_background.get_yaxis().set_visible(False)
+    # ax_background.axis('off')
 
     offset = 0
     extrapolate_offset = 0
@@ -143,14 +146,14 @@ if __name__ == '__main__':
     fit_gp_and_predict(start_year + time_months / 12, total_spending, end_year, extrapolate_year, ax_positive, 'k', 0.1, extrapolate_year - end_year, extrapolate_offset, add_to_offset=False)
     fit_gp_and_predict(start_year + time_months / 12, total_spending, end_year, extrapolate_year, ax_infinite, 'k', 0.1, extrapolate_year - end_year, extrapolate_offset, add_to_offset=False)
 
-    scale = 0.18
-    step_size = 3
-    for year_idx in range(0, n_years, step_size):
-        ax_negative.add_patch(Rectangle(((start_year + year_idx), 0), -scale * math.sqrt(measure_one[year_idx]), scale * math.sqrt(measure_one[year_idx]), facecolor=colors_categories['people'], clip_on=False))
-        ax_negative.add_patch(Rectangle(((start_year + year_idx), 0),  scale * math.sqrt(measure_two[year_idx]), scale * math.sqrt(measure_two[year_idx]), facecolor=colors_categories['society'], clip_on=False))
-        ax_negative.add_patch(Rectangle(((start_year + year_idx), 0), -scale * math.sqrt(measure_three[year_idx]), -scale * math.sqrt(measure_three[year_idx]), facecolor=colors_categories['economy'], clip_on=False))
-        ax_negative.add_patch(Rectangle(((start_year + year_idx), 0),  scale * math.sqrt(measure_four[year_idx]), -scale * math.sqrt(measure_four[year_idx]), facecolor=colors_categories['environment'], clip_on=False))
-        ax_background.plot((start_year + year_idx, start_year + year_idx), (0, 1), color='k', linewidth=2, alpha=0.2, clip_on=False, zorder=-1)
+    # scale = 0.18
+    # step_size = 3
+    # for year_idx in range(0, n_years, step_size):
+    #     ax_negative.add_patch(Rectangle(((start_year + year_idx), 0), -scale * math.sqrt(measure_one[year_idx]), scale * math.sqrt(measure_one[year_idx]), facecolor=colors_categories['people'], clip_on=False))
+    #     # ax_negative.add_patch(Rectangle(((start_year + year_idx), 0),  scale * math.sqrt(measure_two[year_idx]), scale * math.sqrt(measure_two[year_idx]), facecolor=colors_categories['society'], clip_on=False))
+    #     # ax_negative.add_patch(Rectangle(((start_year + year_idx), 0), -scale * math.sqrt(measure_three[year_idx]), -scale * math.sqrt(measure_three[year_idx]), facecolor=colors_categories['economy'], clip_on=False))
+    #     # ax_negative.add_patch(Rectangle(((start_year + year_idx), 0),  scale * math.sqrt(measure_four[year_idx]), -scale * math.sqrt(measure_four[year_idx]), facecolor=colors_categories['environment'], clip_on=False))
+    #     # ax_background.plot((start_year + year_idx, start_year + year_idx), (0, 1), color='k', linewidth=2, alpha=0.2, clip_on=False, zorder=-1)
 
     fig.savefig('plot.pdf')
     fig.savefig('plot.svg')
