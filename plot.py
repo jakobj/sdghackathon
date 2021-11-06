@@ -5,6 +5,14 @@ import numpy as np
 from scipy.interpolate import splrep, splev
 
 
+colors_categories = {
+    'society': '#F64740',
+    'people': '#F3C677',
+    'economy': '#414288',
+    'environment': '#7EE081',
+}
+
+
 def smooth_curve(x, y, s=5):
     bspl = splrep(x, y, s=s)
     bspl_y = splev(x, bspl)
@@ -13,6 +21,8 @@ def smooth_curve(x, y, s=5):
 
 if __name__ == '__main__':
 
+    np.random.seed(1234)
+
     start_year = 2008
     end_year = 2022
 
@@ -20,8 +30,11 @@ if __name__ == '__main__':
     n_months = n_years * 12
     time_years = np.arange(n_years)
     time_months = np.arange(n_months)
-    sdg_spending = 10 + 0.05 * time_months + 0.3 * np.random.randn(n_months)
-    total_spending = 40 + 0.04 * time_months + 0.2 * np.random.randn(n_months)
+    sdg_spending_0 = 10 + 0.05 * time_months + 0.3 * np.random.randn(n_months)
+    sdg_spending_1 = 9 - 0.005 * time_months + 0.3 * np.random.randn(n_months)
+    sdg_spending_2 = 11 + 0.05 * time_months + 0.3 * np.random.randn(n_months)
+    sdg_spending_3 = 13 - 0.05 * time_months + 0.3 * np.random.randn(n_months)
+    total_spending = 80 + 0.06 * time_months + 0.2 * np.random.randn(n_months)
     index = 10 * (40 + 0.04 * time_months + 0.2 * np.random.randn(n_months))
     measure_one = 30 - 2.05 * time_years + 0.4 * np.random.randn(n_years)
     measure_two = 10 + 1.45 * time_years + 0.8 * np.random.randn(n_years)
@@ -41,7 +54,7 @@ if __name__ == '__main__':
     ax_positive.spines['left'].set_visible(False)
     ax_positive.spines['top'].set_visible(False)
     ax_positive.set_xlim([0, n_months])
-    ax_positive.set_ylim([0, 50])
+    ax_positive.set_ylim([0, 100])
     ax_positive.set_xticks(ticks_months)
     ax_positive.set_xticklabels(tickslabels_years)
 
@@ -56,16 +69,22 @@ if __name__ == '__main__':
     ax_negative.set_ylim([-5, 10])
 
     offset = 0
-    ax_positive.fill_between(time_months, offset, offset + sdg_spending)
-    offset += sdg_spending
-    ax_positive.fill_between(time_months, offset, total_spending)
+    ax_positive.fill_between(time_months, offset, offset + sdg_spending_0, color=colors_categories['people'])
+    offset += sdg_spending_0
+    ax_positive.fill_between(time_months, offset, offset + sdg_spending_1, color=colors_categories['society'])
+    offset += sdg_spending_1
+    ax_positive.fill_between(time_months, offset, offset + sdg_spending_2, color=colors_categories['economy'])
+    offset += sdg_spending_2
+    ax_positive.fill_between(time_months, offset, offset + sdg_spending_3, color=colors_categories['environment'])
+    offset += sdg_spending_3
+    ax_positive.fill_between(time_months, offset, total_spending, alpha=0.1, color='k', linewidth=0)
+    # ax_positive.plot(time_months, total_spending)
 
     scale = 1.0
     for year_idx in range(n_years):
-        ax_negative.plot()
-        ax_negative.add_patch(Rectangle(((year_idx + 0.5) * 12, 0), -scale * math.sqrt(measure_one[year_idx]), scale * math.sqrt(measure_one[year_idx]), facecolor='C2'))
-        ax_negative.add_patch(Rectangle(((year_idx + 0.5) * 12, 0),  scale * math.sqrt(measure_two[year_idx]), scale * math.sqrt(measure_two[year_idx]), facecolor='C3'))
-        ax_negative.add_patch(Rectangle(((year_idx + 0.5) * 12, 0), -scale * math.sqrt(measure_three[year_idx]), -scale * math.sqrt(measure_three[year_idx]), facecolor='C4'))
-        ax_negative.add_patch(Rectangle(((year_idx + 0.5) * 12, 0),  scale * math.sqrt(measure_four[year_idx]), -scale * math.sqrt(measure_four[year_idx]), facecolor='C5'))
+        ax_negative.add_patch(Rectangle(((year_idx + 0.5) * 12, 0), -scale * math.sqrt(measure_one[year_idx]), scale * math.sqrt(measure_one[year_idx]), facecolor=colors_categories['people']))
+        ax_negative.add_patch(Rectangle(((year_idx + 0.5) * 12, 0),  scale * math.sqrt(measure_two[year_idx]), scale * math.sqrt(measure_two[year_idx]), facecolor=colors_categories['society']))
+        ax_negative.add_patch(Rectangle(((year_idx + 0.5) * 12, 0), -scale * math.sqrt(measure_three[year_idx]), -scale * math.sqrt(measure_three[year_idx]), facecolor=colors_categories['economy']))
+        ax_negative.add_patch(Rectangle(((year_idx + 0.5) * 12, 0),  scale * math.sqrt(measure_four[year_idx]), -scale * math.sqrt(measure_four[year_idx]), facecolor=colors_categories['environment']))
 
     fig.savefig('plot.pdf')
