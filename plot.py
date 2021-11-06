@@ -56,15 +56,13 @@ if __name__ == '__main__':
     ax_negative = fig.add_axes([0.05, 0.1, 0.85, 0.4])
     ax_background = fig.add_axes([0.05, 0.05, 0.85, 0.4], zorder=-1)
 
-    # ax_positive.patch.set_alpha(0.0)
     ax_positive.yaxis.set_label_position("right")
     ax_positive.yaxis.tick_right()
     ax_positive.spines['left'].set_visible(False)
     ax_positive.spines['top'].set_visible(False)
     ax_positive.set_xlim([start_year, extrapolate_year])
-    # ax_positive.set_ylim([0, 100])
+    ax_positive.set_ylim([0, 100])
     ax_positive.set_xticks(ticks_years)
-    # ax_positive.set_xticklabels(tickslabels_years)
 
     ax_negative.patch.set_alpha(0.0)
     ax_negative.yaxis.tick_right()
