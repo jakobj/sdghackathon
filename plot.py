@@ -42,7 +42,7 @@ if __name__ == '__main__':
     data_total = np.empty(len(data_by_sdg))
 
     for year_idx in range(end_year - start_year + 1):
-        data_total[year_idx * 12:(year_idx + 1) * 12] = data_total_by_year[year_idx, 1]
+        data_total[year_idx * 12:(year_idx + 1) * 12] = data_total_by_year[year_idx, 1] / 12.
     data_total *= 1e6
 
     n_years = end_year - start_year
@@ -97,14 +97,14 @@ if __name__ == '__main__':
     ax_infinite.spines['bottom'].set_visible(False)
     ax_infinite.spines['top'].set_visible(False)
     ax_infinite.set_xlim([start_year, extrapolate_year])
-    ax_infinite.set_ylim([1e3, 1.4e9])
+    ax_infinite.set_ylim([1e3, 1.4e8])
     ax_infinite.set_xticks([])
     # ax_infinite.set_yticks([1e8, 5e8, 1e9])
     # ax_infinite.set_yticklabels(["", "500Mio. CHF", ""])
     # ax_infinite.set_yticks([0.1e9, 0.5e9])
     # ax_infinite.set_yticklabels(["100Mio. CHF", "500Mio. CHF"])
-    ax_infinite.set_yticks([0.1e9, 1e9])
-    ax_infinite.set_yticklabels(["100Mio. CHF", "1000Mio. CHF"])
+    ax_infinite.set_yticks([0.1e8, 1e8])
+    ax_infinite.set_yticklabels(["10Mio. CHF", "100Mio. CHF"])
 
     # ax_negative.patch.set_alpha(0.0)
     # ax_negative.yaxis.tick_right()
